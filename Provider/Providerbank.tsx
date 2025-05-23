@@ -4,7 +4,7 @@ import { Transferencia } from '../Modelos/Transferencia';
 import { Plantilla } from '../Modelos/Plantilla';
 
 export default function Providerbank({ children }: Plantilla) {
-  const [balance, setBalance] = useState(1000);
+  const [balance, setBalance] = useState(100000);
   const [transferencias, setTransferencias] = useState<Transferencia[]>([]);
 
   const deposito = () => {
