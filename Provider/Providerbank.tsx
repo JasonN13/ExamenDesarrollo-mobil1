@@ -1,46 +1,35 @@
-import { View, Text } from 'react-native'
-import React, { Children, useState } from 'react'
-import ContexBanco from '../Context/ContextBanco'
-import {Transferencia} from '../Modelos/Transferencia'
-import { Plantilla } from '../Modelos/Plantilla'
+import React, { useState } from 'react';
+import ContextBanco from '../Context/ContextBanco';
+import { Transferencia } from '../Modelos/Transferencia';
+import { Plantilla } from '../Modelos/Plantilla';
 
-export default function Providerbank(props: React.PropsWithChildren<Plantilla>) {
-    const [balance, setbalance] = useState(1000);
-    const [transferencias, setTransferencias] = useState<Transferencia[]>([]);
+export default function Providerbank({ children }: Plantilla) {
+  const [balance, setBalance] = useState(1000);
+  const [transferencias, setTransferencias] = useState<Transferencia[]>([]);
 
-    const deposito = () =>{
-        const newTransferencia: Transferencia = {
-            id: Date.now(),
-            Descripcion:"Deposito de 500"
+  const deposito = () => {
+    const nueva: Transferencia = {
+      id: Date.now(),
+      Descripcion: "Depósito de 500",
     };
-    setbalance(prev => prev + 500);
-    setTransferencias(prev => [newTransferencia, ...prev].slice(0,100));
-    };
-    const tranferencia = (Monto: number, to: string):boolean => {
-        if (Monto > balance) return false;
-        const newTransferencia: Transferencia = {
-            id: Date.now(),
-            Descripcion: `Transferencia de ${Monto} a ${to}`
-        };
+    setBalance(prev => prev + 500);
+    setTransferencias(prev => [nueva, ...prev].slice(0, 100));
+  };
 
-        setbalance(prev => prev - Monto);
-        setTransferencias(prev => [newTransferencia, ...prev].slice(0,100));
-        return true;
+  const tranferencia = (monto: number, to: string): boolean => {
+    if (monto > balance) return false;
+    const nueva: Transferencia = {
+      id: Date.now(),
+      Descripcion: `Transferencia de ${monto} a ${to}`,
     };
-    const value = {
-        balance,
-        transferencias,
-        deposito,
-        tranferencia
-    };
+    setBalance(prev => prev - monto);
+    setTransferencias(prev => [nueva, ...prev].slice(0, 100));
+    return true;
+  };
 
-  return (
-    <ContexBanco.Provider value={value}>
-      {props.children}
-    </ContexBanco.Provider>
-  )
+  const value = { balance, transferencias, deposito, tranferencia };
+
+  return <ContextBanco.Provider value={value}>{children}</ContextBanco.Provider>;
 }
 
-export const UseBancoContext=()=>{
-    return React.useContext(ContexBanco);
-}
+export const UseBancoContext = () => React.useContext(ContextBanco);
